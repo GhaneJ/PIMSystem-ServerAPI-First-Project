@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ListPriceGeneralAPI.Migrations
+namespace PIM_API.Migrations
 {
     [DbContext(typeof(PriceListDbContext))]
     partial class PriceListDbContextModelSnapshot : ModelSnapshot
@@ -23,14 +23,23 @@ namespace ListPriceGeneralAPI.Migrations
 
             modelBuilder.Entity("ListPriceGeneralAPI.Models.Item", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<string>("ItemName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<decimal>("ItemPrice")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ItemPrice")
+                        .HasColumnType("float");
 
-                    b.HasKey("ItemName");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemName")
+                        .IsUnique();
 
                     b.ToTable("Items");
                 });

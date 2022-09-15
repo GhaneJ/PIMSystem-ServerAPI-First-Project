@@ -5,16 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ListPriceGeneralAPI.Models
 {
+    [Index(nameof(ItemName), IsUnique = true)]
     public class Item
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "This field is required.")]
         [DisplayName("Item Name")]
         [Column(TypeName = "nvarchar(50)")]
-        public string ItemName { get; set; }
-
-        [Precision(18, 2)]
-        public decimal ItemPrice { get; set; }
+        public string? ItemName { get; set; }
+        public double ItemPrice { get; set; }
     }
 }

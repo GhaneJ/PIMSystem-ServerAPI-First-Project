@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ListPriceGeneralAPI.Models
+namespace PIM_API.Models
 {
     [Index(nameof(ItemName), IsUnique = true)]
     public class Item
@@ -15,6 +15,6 @@ namespace ListPriceGeneralAPI.Models
         [DisplayName("Item Name")]
         [Column(TypeName = "nvarchar(50)")]
         public string? ItemName { get; set; }
-        public double ItemPrice { get; set; }
+        public double ItemRetailPrice { get; set; }
     }
 }

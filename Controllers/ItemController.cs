@@ -1,18 +1,18 @@
-﻿using ListPriceGeneralAPI.Data;
-using ListPriceGeneralAPI.Models;
+﻿using PIM_API.Data;
+using PIM_API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace ListPriceGeneralAPI.Controllers
+namespace PIM_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ItemController : ControllerBase
     {
-        private readonly PriceListDbContext _dbContext;
+        private readonly PriceAPIDbContext _dbContext;
 
-        public ItemController(PriceListDbContext dbContext)
+        public ItemController(PriceAPIDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -23,8 +23,8 @@ namespace ListPriceGeneralAPI.Controllers
             return _dbContext.Items.ToList();
         }
 
-        [HttpGet("{itemName}")]
-        public ActionResult<Item> GetUser(string itemName)
+        [HttpGet("itemName")]
+        public ActionResult<Item> GetItem(string itemName)
         {
             return _dbContext.Items.FirstOrDefault(x => x.ItemName == itemName);
         }
@@ -35,7 +35,7 @@ namespace ListPriceGeneralAPI.Controllers
             var newItem = new Item()
             {
                 ItemName = item.ItemName,
-                ItemPrice = item.ItemPrice,
+                ItemRetailPrice = item.ItemRetailPrice,
             };
 
             _dbContext.Items.Add(newItem);
@@ -44,22 +44,33 @@ namespace ListPriceGeneralAPI.Controllers
             return "Item created successfully";
         }
 
-        [HttpPost("updateitem")]
-        public async Task<ActionResult<string>> UpdateItem(Item item)
+        
+        // PUT: api/BloodDonation/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("updateitem")]
+        public async Task<IActionResult> PutItem(string itemName, Item item)
         {
-            var currentItem = _dbContext.Items.Where(x => x.ItemName == item.ItemName).FirstOrDefault();
-            if (currentItem != null)
-            {
-                currentItem.ItemName = item.ItemName;
-                currentItem.ItemPrice = item.ItemPrice;
-            }
-            else
-            {
-                return "User not found";
-            }
-            await _dbContext.SaveChangesAsync();
+            item.ItemName = itemName;
 
-            return "Item updated successfully";
+            _dbContext.Entry(item).State = EntityState.Modified;
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ItemExists(itemName))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         [HttpDelete("deleteitem")]
@@ -81,6 +92,10 @@ namespace ListPriceGeneralAPI.Controllers
                 return "Item not found";
             }
             return "Item deleted successfully";
+        }
+        private bool ItemExists(string itemName)
+        {
+            return _dbContext.Items.Any(e => e.ItemName == itemName);
         }
     }
 }

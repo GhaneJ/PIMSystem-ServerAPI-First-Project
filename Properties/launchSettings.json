@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "ListPriceGeneralAPI": {
+    "PIM_API": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

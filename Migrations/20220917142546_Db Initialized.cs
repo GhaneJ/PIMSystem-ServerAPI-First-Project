@@ -4,7 +4,7 @@
 
 namespace PIM_API.Migrations
 {
-    public partial class InitializeDb : Migration
+    public partial class DbInitialized : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,7 +15,7 @@ namespace PIM_API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ItemName = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    ItemPrice = table.Column<double>(type: "float", nullable: false)
+                    ItemRetailPrice = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
